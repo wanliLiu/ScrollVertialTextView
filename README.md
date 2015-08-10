@@ -33,3 +33,5 @@ you mast implements ScrollVertialAdapter as the data soucre,as my sample code di
 at last you just
 ```java
 ScrollVertialTextView.setAdapter(new sampleAdapter(getData()));
+
+Done!
