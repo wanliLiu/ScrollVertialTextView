@@ -1,6 +1,10 @@
 ScrollVertialTextView
 ---------------------
 
+see gif demo:
+
+![](https://github.com/wanliLiu/ScrollVertialTextView/raw/master/Images/demo.gif)  
+
 custom viewgroup to layout two textviews to scroll in vetial direction,you can easy add to your project,just add a couple of lines.
 
 you mast implements ScrollVertialAdapter as the data soucre,as my sample code display below:
