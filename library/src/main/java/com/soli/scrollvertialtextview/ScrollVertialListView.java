@@ -44,7 +44,7 @@ public class ScrollVertialListView extends ViewGroup {
     }
 
     /**
-     *
+     *运动速度控制
      */
     private class EaseSineInOutInterpolator implements Interpolator {
         public float getInterpolation(float input) {
@@ -155,13 +155,29 @@ public class ScrollVertialListView extends ViewGroup {
         requestLayout();
     }
 
+    private int lastViewTop, lastViewBottom;
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-            scrollTo(0, mScroller.getCurrY());
-            postInvalidate();
-            Log.e(TAG, "getScrollY:" + getScrollY());
 
+            Log.e(TAG, "mScroller.getCurrY:" + mScroller.getCurrY() + "");
+            Log.e(TAG, "viewTop.getTop:" + viewTop.getTop() + "");
+            //use offsetTopAndBottom
+            lastViewTop = viewTop.getTop();
+            lastViewBottom = viewBottom.getTop();
+            viewTop.offsetTopAndBottom(-mScroller.getCurrY());
+            viewBottom.offsetTopAndBottom(-mScroller.getCurrY());
+            viewTop.offsetTopAndBottom(lastViewTop);
+            viewBottom.offsetTopAndBottom(lastViewBottom);
+            postInvalidate();
+
+            //use scrollto
+//            scrollTo(0, mScroller.getCurrY());
+//            postInvalidate();
+//            Log.e(TAG, "getScrollY:" + getScrollY());
+
+
+            //user layout
 //            scrollOffset = mScroller.getCurrY();
 //            requestLayout();
 //            Log.e(TAG, "scrollOffset:" + scrollOffset);
@@ -212,8 +228,16 @@ public class ScrollVertialListView extends ViewGroup {
 
         mScroller.startScroll(0, 0, 0, getItemHeight(), 2000);
         postInvalidate();
+
     }
 
+    /**
+     *
+     */
+    public void stopSchedul() {
+        viewTop.offsetTopAndBottom(-viewTop.getTop() + getItemHeight());
+        viewBottom.offsetTopAndBottom(-viewBottom.getTop() + getItemHeight());
+    }
     /**
      *
      */
