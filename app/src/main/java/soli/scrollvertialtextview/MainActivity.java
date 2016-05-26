@@ -1,12 +1,12 @@
 package soli.scrollvertialtextview;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.soli.scrollvertialtextview.ScrollVertialAdapter;
+import com.soli.scrollvertialtextview.ScrollVertialListView;
 import com.soli.scrollvertialtextview.ScrollVertialTextView;
 
 import java.util.ArrayList;
@@ -15,6 +15,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ScrollVertialTextView textView;
+    private ScrollVertialListView scrollView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +24,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        textView = (ScrollVertialTextView)findViewById(R.id.sample);
+        textView = (ScrollVertialTextView) findViewById(R.id.sample);
         textView.setAdapter(new sampleAdapter(getData()));
+
+        scrollView = (ScrollVertialListView) findViewById(R.id.scrollView);
+//        scrollView.setItemLayoutResourcesId(R.layout.scrooller_item_one);
+
+        findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollView.startSchedul();
+            }
+        });
+        findViewById(R.id.stop).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     @Override
@@ -38,11 +56,9 @@ public class MainActivity extends AppCompatActivity {
         textView.stopSchedul();
     }
 
-    private List<String> getData()
-    {
+    private List<String> getData() {
         List<String> data = new ArrayList<String>();
-        for(int i = 0; i < 10; i++)
-        {
+        for (int i = 0; i < 10; i++) {
             data.add("Text content display at " + i + "max display in one line,of course you can custom");
         }
 
@@ -50,12 +66,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class sampleAdapter implements ScrollVertialAdapter{
+    private class sampleAdapter implements ScrollVertialAdapter {
 
         private List<String> data;
 
-        public sampleAdapter(List<String> temp)
-        {
+        public sampleAdapter(List<String> temp) {
             data = temp;
         }
 
@@ -71,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(int position) {
-            Toast.makeText(MainActivity.this,"You click:\n" + getTextString(position) ,Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "You click:\n" + getTextString(position), Toast.LENGTH_SHORT).show();
         }
     }
 }

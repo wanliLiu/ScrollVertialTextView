@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#F5F5F5</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#E50064</color>
+
+    <color name="color_system_background">#EEEEEE</color>
+    <color name="color_system_text">#444444</color>
+    <color name="color_black">#000000</color>
+
+    <color name="color_line">#dddddd</color>
+
+    <color name="color_white">#ffffff</color>
+    <color name="transparent">#00000000</color><!-- 透明 -->
+    <color name="color_gray">#989898</color>
+    <color name="purple_color">#e40165</color>
+    <color name="college_purple_color">#e33780</color>
+    <color name="college_orange_color">#faaa10</color>
+    <color name="purple_press_color">#ff6666</color>
+
+    <color name="color_rea_earings">#e50065</color>
+    <color name="color_blue">#0c5bbc</color>
+    <color name="color_green">#719f08</color>
+    <color name="color_gold">#ff9900</color>
+
+    <color name="shadow_color">#66000000</color>
+    <color name="shadow_white_color">#aaffffff</color>
+    <color name="scrim">#42000000</color>
+    <color name="tumblr_primary">#36465D</color>
+    <color name="transparent_background">#96000000</color>
+
+</resources>

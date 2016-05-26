@@ -22,4 +22,10 @@ public abstract interface ScrollVertialAdapter {
      * @param position
      */
      void onItemClick(int position);
+
+//    /**
+//     *
+//     * @return
+//     */
+//    View getItemView();
 }
