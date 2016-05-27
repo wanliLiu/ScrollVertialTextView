@@ -2,6 +2,8 @@ package com.soli.scrollvertialtextview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -17,15 +19,14 @@ import java.util.TimerTask;
  */
 public class ScrollVertialListView extends ViewGroup {
 
-    private final String TAG = ScrollVertialListView.class.getSimpleName();
-
     private ScrollVertialAdapter mAdapter;
-    private View viewTop, viewBottom;
+
     private Scroller mScroller;
+
     private int itemLayoutResourcesId = 0;
     private int dividerIime = 2000;
-    private int currentPosition = 0;
-    private int scrollOffset = 0;
+
+    private boolean isScrolling = false;
 
     private Timer mTimer;
 
@@ -44,7 +45,7 @@ public class ScrollVertialListView extends ViewGroup {
     }
 
     /**
-     *运动速度控制
+     * 运动速度控制
      */
     private class EaseSineInOutInterpolator implements Interpolator {
         public float getInterpolation(float input) {
@@ -56,6 +57,7 @@ public class ScrollVertialListView extends ViewGroup {
      * @param ctx
      */
     private void init(Context ctx, AttributeSet attrs) {
+        mTimer = new Timer();
         mScroller = new Scroller(ctx, new EaseSineInOutInterpolator());
         TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.VertialScrooll);
         try {
@@ -74,8 +76,9 @@ public class ScrollVertialListView extends ViewGroup {
     private void addChildView() {
         if (itemLayoutResourcesId > 0) {
             removeAllViews();
-            addView(viewTop = getItemView());
-            addView(viewBottom = getItemView());
+            addView(getItemView());
+            addView(getItemView());
+            setViewData();
         }
     }
 
@@ -112,19 +115,13 @@ public class ScrollVertialListView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//        for (int i = 0; i < getChildCount(); i++) {
-//            final View child = getChildAt(i);
-//            final int left = getPaddingLeft();
-//            final int top = getPaddingTop() + i * getItemHeight();
-//            final int right = left + child.getMeasuredWidth();
-//            final int bottom = top + child.getMeasuredHeight();
-//            child.layout(left, top, right, bottom);
-//        }
-        if (getChildCount() > 0) {
+        for (int i = 0; i < getChildCount(); i++) {
+            final View child = getChildAt(i);
             final int left = getPaddingLeft();
-            final int top = getPaddingTop() - scrollOffset;
-            viewTop.layout(left, top, left + viewTop.getMeasuredWidth(), top + viewTop.getMeasuredHeight());
-            viewBottom.layout(left, viewTop.getBottom(), left + viewBottom.getMeasuredWidth(), viewTop.getBottom() + viewBottom.getMeasuredHeight());
+            final int top = getPaddingTop() + i * getItemHeight();
+            final int right = left + child.getMeasuredWidth();
+            final int bottom = top + child.getMeasuredHeight();
+            child.layout(left, top, right, bottom);
         }
     }
 
@@ -135,55 +132,46 @@ public class ScrollVertialListView extends ViewGroup {
         return getChildCount() > 0 ? getChildAt(0).getMeasuredHeight() : 0;
     }
 
-    /**
-     * 获取需要同时滑动的items个数
-     *
-     * @return
-     */
-    private int getDisplayItems() {
-        return getChildCount();
-    }
 
     /**
      *
      */
-    private void exchangeViewPosition() {
-        scrollOffset = 0;
-        View temp = viewTop;
-        viewTop = viewBottom;
-        viewTop = temp;
-        requestLayout();
+    private void setViewData() {
+        if (mAdapter != null) {
+            for (int i = 0; i < getChildCount(); i++) {
+                mAdapter.setView(i, getChildAt(i));
+            }
+        }
     }
 
-    private int lastViewTop, lastViewBottom;
+    /**
+     * 更新视图内容
+     */
+    private Handler refreshHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            schedul();
+            mAdapter.resetData();
+            setViewData();
+        }
+    };
+
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-
-            Log.e(TAG, "mScroller.getCurrY:" + mScroller.getCurrY() + "");
-            Log.e(TAG, "viewTop.getTop:" + viewTop.getTop() + "");
-            //use offsetTopAndBottom
-            lastViewTop = viewTop.getTop();
-            lastViewBottom = viewBottom.getTop();
-            viewTop.offsetTopAndBottom(-mScroller.getCurrY());
-            viewBottom.offsetTopAndBottom(-mScroller.getCurrY());
-            viewTop.offsetTopAndBottom(lastViewTop);
-            viewBottom.offsetTopAndBottom(lastViewBottom);
+            scrollTo(0, mScroller.getCurrY());
             postInvalidate();
-
-            //use scrollto
-//            scrollTo(0, mScroller.getCurrY());
-//            postInvalidate();
-//            Log.e(TAG, "getScrollY:" + getScrollY());
-
-
-            //user layout
-//            scrollOffset = mScroller.getCurrY();
-//            requestLayout();
-//            Log.e(TAG, "scrollOffset:" + scrollOffset);
+            Log.e("mScroller.getCurrY():", mScroller.getCurrY() + "");
 
             if (mScroller.getCurrY() == mScroller.getFinalY()) {
-//                exchangeViewPosition();
+                if (isScrolling) {
+                    mTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            refreshHandler.sendEmptyMessage(0);
+                        }
+                    }, dividerIime);
+                }
             }
         }
     }
@@ -201,14 +189,7 @@ public class ScrollVertialListView extends ViewGroup {
      */
     public void setAdapter(ScrollVertialAdapter adapter) {
         mAdapter = adapter;
-//        removeAllViews();
-//
-//        addView(viewTop = mAdapter.getItemView());
-//        addView(viewBottom = mAdapter.getItemView());
-    }
-
-    public void setOnItemClickListener() {
-
+        addChildView();
     }
 
     /**
@@ -223,28 +204,36 @@ public class ScrollVertialListView extends ViewGroup {
      *
      */
     public void startSchedul() {
-        mTimer = new Timer();
-//        mTimer.scheduleAtFixedRate(new schedulTask(), 0, dividerIime);
+        if (!isScrolling) {
+            schedul();
+        }
+    }
 
-        mScroller.startScroll(0, 0, 0, getItemHeight(), 2000);
+    /**
+     * @return
+     */
+    private int getDuration() {
+        int duration = getItemHeight();
+
+        if (duration < 1000)
+            duration = 1000;
+
+        return duration;
+    }
+
+    /**
+     *
+     */
+    private void schedul() {
+        isScrolling = true;
+        mScroller.startScroll(0, 0, 0, getItemHeight(), getDuration());
         postInvalidate();
-
     }
 
     /**
      *
      */
     public void stopSchedul() {
-        viewTop.offsetTopAndBottom(-viewTop.getTop() + getItemHeight());
-        viewBottom.offsetTopAndBottom(-viewBottom.getTop() + getItemHeight());
-    }
-    /**
-     *
-     */
-    private class schedulTask extends TimerTask {
-        @Override
-        public void run() {
-            Log.e(TAG, "开始滑动");
-        }
+        isScrolling = false;
     }
 }

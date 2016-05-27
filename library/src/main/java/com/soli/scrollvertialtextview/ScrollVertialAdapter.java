@@ -1,5 +1,7 @@
 package com.soli.scrollvertialtextview;
 
+import android.view.View;
+
 /**
  * Created by SoLi on 2015/7/20.
  */
@@ -28,4 +30,8 @@ public abstract interface ScrollVertialAdapter {
 //     * @return
 //     */
 //    View getItemView();
+
+    void setView(int position, View view);
+
+    void resetData();
 }

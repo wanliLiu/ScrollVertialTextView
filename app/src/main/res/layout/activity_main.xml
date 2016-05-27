@@ -20,9 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/color_system_text"
-        android:padding="15dp"
-        app:dividerTime="5000"
+        app:dividerTime="1000"
         app:itemLayout="@layout/scrooller_item" />
 
     <LinearLayout
