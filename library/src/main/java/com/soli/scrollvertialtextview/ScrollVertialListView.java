@@ -78,6 +78,8 @@ public class ScrollVertialListView extends ViewGroup {
             removeAllViews();
             addView(getItemView());
             addView(getItemView());
+            addView(getItemView());
+            addView(getItemView());
             setViewData();
         }
     }
