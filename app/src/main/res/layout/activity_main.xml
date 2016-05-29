@@ -7,6 +7,14 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="not recommend"
+        android:textSize="18sp" />
+
+
     <com.soli.scrollvertialtextview.ScrollVertialTextView
         android:id="@+id/sample"
         android:layout_width="match_parent"
@@ -15,12 +23,19 @@
 
     </com.soli.scrollvertialtextview.ScrollVertialTextView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="recommend use this"
+        android:textSize="18sp" />
+
     <com.soli.scrollvertialtextview.ScrollVertialListView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_gray"
         android:layout_marginTop="20dp"
+        android:background="@color/color_gray"
         app:dividerTime="2000"
         app:itemLayout="@layout/scrooller_item" />
 
