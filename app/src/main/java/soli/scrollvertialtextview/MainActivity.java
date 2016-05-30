@@ -28,7 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
         scrollView = (ScrollVertialListView) findViewById(R.id.scrollView);
         scrollView.setAdapter(new sampleAdapter(getData()));
-//        scrollView.setItemLayoutResourcesId(R.layout.scrooller_item_one);
+//        scrollView.setItemLayoutResourcesId(R.layout.scrooller_item);
+
+        ((ScrollVertialListView) findViewById(R.id.scrollView1)).setAdapter(new sampleAdapter(getData()));
+        ((ScrollVertialListView) findViewById(R.id.scrollView2)).setAdapter(new sampleAdapter(getData()));
+
     }
 
     @Override
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         textView.startSchedul();
         scrollView.startSchedul();
+        ((ScrollVertialListView) findViewById(R.id.scrollView1)).startSchedulDelay();
+        ((ScrollVertialListView) findViewById(R.id.scrollView2)).startSchedulDelay(5000);
     }
 
     @Override
@@ -47,10 +53,29 @@ public class MainActivity extends AppCompatActivity {
 
     private List<String> getData() {
         List<String> data = new ArrayList<String>();
-        for (int i = 0; i < 10; i++) {
-            data.add("--------------------------" + i + "--------------------------");
-        }
+//        for (int i = 0; i < 10; i++) {
+//            data.add("--------------------------" + i + "--------------------------");
+//        }
+        data.add("关于售后");
+        data.add("购买了保税区的商品，什么时候发货？");
+        data.add("关于返现");
+        data.add("购买了荷兰仓的商品，什么时候发货？");
+        data.add("我购买的成都仓商品，什么时候发货？");
+        data.add("用产品出现过敏，怎么办？");
+        data.add("有时候用护肤品时，会感觉皮肤刺痛，这是怎么回事？");
+        data.add("购买的护肤品和之前同款的味道不同（或者和专柜的味道不同）");
+        data.add("为什么我买的商品上没有生产日期或者到期日期？");
+        data.add("为什么有些产品没有塑封呢？");
+        data.add("为何有时扫条形码，无法扫出来？");
+        data.add("任务的奖励何时发放？");
         return data;
+    }
+
+    public void onViewClick(View view) {
+        if (!scrollView.isScrolling())
+            scrollView.startSchedulDelay();
+        else
+            scrollView.stopSchedul();
     }
 
     /**

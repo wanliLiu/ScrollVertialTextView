@@ -132,7 +132,7 @@ public class ScrollVertialListView extends ViewGroup {
             final View child = getChildAt(i);
             final int left = getPaddingLeft();
             final int top = getPaddingTop() + i * getScroollItemHeight();
-            final int right = left + child.getMeasuredWidth();
+            final int right = getMeasuredWidth() - getPaddingRight();
             final int bottom = top + child.getMeasuredHeight();
             child.layout(left, top, right, bottom);
         }
@@ -173,6 +173,7 @@ public class ScrollVertialListView extends ViewGroup {
 
     /**
      * 设置视图的另一种方式
+     *
      * @param resId
      */
     public void setItemLayoutResourcesId(int resId) {
@@ -201,12 +202,31 @@ public class ScrollVertialListView extends ViewGroup {
      */
     public void startSchedul() {
         if (!isScrolling) {
+            setViewContentData();
             schedul();
         }
     }
 
     /**
      *
+     */
+    public void startSchedulDelay() {
+        startSchedulDelay(dividerIime);
+    }
+
+    /**
+     * @param delayTime
+     */
+    public void startSchedulDelay(int delayTime) {
+        this.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startSchedul();
+            }
+        }, delayTime);
+    }
+
+    /**
      * @return
      */
     private int getDuration() {
@@ -225,6 +245,13 @@ public class ScrollVertialListView extends ViewGroup {
         refreshHandler.sendEmptyMessageDelayed(0, dividerIime + getDuration());
         mScroller.startScroll(0, 0, 0, getScroollItemHeight(), getDuration());
         invalidate();
+    }
+
+    /**
+     * @return
+     */
+    public boolean isScrolling() {
+        return isScrolling;
     }
 
     /**

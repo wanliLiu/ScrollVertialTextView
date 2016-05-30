@@ -24,11 +24,13 @@
     </com.soli.scrollvertialtextview.ScrollVertialTextView>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:onClick="onViewClick"
         android:text="recommend use this"
         android:textSize="18sp" />
+
 
     <com.soli.scrollvertialtextview.ScrollVertialListView
         android:id="@+id/scrollView"
@@ -39,4 +41,32 @@
         app:dividerTime="2000"
         app:itemLayout="@layout/scrooller_item" />
 
+    <com.soli.scrollvertialtextview.ScrollVertialListView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/color_gray"
+        android:padding="5dp"
+        app:dividerTime="2000"
+        app:itemLayout="@layout/item_test" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="onViewClick"
+        android:background="@color/color_green"
+        android:text="in the bleow layout have a problem,root layout is FrameLayout,and cotent can't display as desire.if anyone konw,please let me know"
+        android:textSize="18sp" />
+
+    <com.soli.scrollvertialtextview.ScrollVertialListView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/color_gray"
+        android:padding="10dp"
+        app:dividerTime="2000"
+        app:itemLayout="@layout/item_test_1" />
 </LinearLayout>
