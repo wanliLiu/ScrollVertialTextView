@@ -1,72 +1,85 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="not recommend"
-        android:textSize="18sp" />
-
-
-    <com.soli.scrollvertialtextview.ScrollVertialTextView
-        android:id="@+id/sample"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
-
-    </com.soli.scrollvertialtextview.ScrollVertialTextView>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
         android:onClick="onViewClick"
-        android:text="recommend use this"
-        android:textSize="18sp" />
-
-
-    <com.soli.scrollvertialtextview.ScrollVertialListView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/color_gray"
-        app:dividerTime="2000"
-        app:itemLayout="@layout/scrooller_item" />
-
-    <com.soli.scrollvertialtextview.ScrollVertialListView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/color_gray"
-        android:padding="5dp"
-        app:dividerTime="2000"
-        app:itemLayout="@layout/item_test" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:onClick="onViewClick"
-        android:background="@color/color_green"
-        android:text="in the bleow layout have a problem,root layout is FrameLayout,and cotent can't display as desire.if anyone konw,please let me know"
-        android:textSize="18sp" />
-
-    <com.soli.scrollvertialtextview.ScrollVertialListView
-        android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@color/color_gray"
+        android:orientation="vertical"
         android:padding="10dp"
-        app:dividerTime="2000"
-        app:itemLayout="@layout/item_test_1" />
-</LinearLayout>
+        tools:context=".MainActivity">
+
+        <com.soli.scrollvertialtextview.ScrollVertialListView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/color_gray"
+            app:dividerTime="2000"
+            app:itemLayout="@layout/scrooller_item" />
+
+        <com.soli.scrollvertialtextview.ScrollVertialListView
+            android:id="@+id/scrollView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/color_gray"
+            android:padding="5dp"
+            app:dividerTime="2000"
+            app:itemLayout="@layout/item_test" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/color_green"
+            android:onClick="onViewClick"
+            android:text="in the bleow layout have a problem,root layout is FrameLayout,and cotent can't display as desire.if anyone konw,please let me know"
+            android:textSize="18sp" />
+
+        <com.soli.scrollvertialtextview.ScrollVertialListView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/color_gray"
+            android:padding="10dp"
+            app:dividerTime="2000"
+            app:itemLayout="@layout/item_test_1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="Test"
+            android:text="测试" />
+
+        <com.soli.scrollvertialtextview.MarqueeLayout
+            android:id="@+id/marqueeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemLayout="@layout/scrooller_item" />
+
+        <soli.scrollvertialtextview.MarqueeView
+            android:id="@+id/enContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/press_shape"
+            android:padding="5dip"
+            app:autoStart="true"
+            app:pause="700"
+            app:speed="10">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="2----购买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味道不同）-------同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味的护肤品和之前同款的味道不同（或者和专柜的味的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味道不同）----------------------------结束"
+                android:textSize="14sp" />
+        </soli.scrollvertialtextview.MarqueeView>
+    </LinearLayout>
+</ScrollView>
+

@@ -1,20 +1,24 @@
 package com.soli.scrollvertialtextview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
+import android.widget.TextView;
 
 /**
  * Created by SoLi on 2016/5/25.
  */
-public class ScrollVertialListView extends ViewGroup {
+public class MarqueeLayout extends LinearLayout {
 
     private ScrollVertialAdapter mAdapter;
 
@@ -23,29 +27,23 @@ public class ScrollVertialListView extends ViewGroup {
     private int itemLayoutResourcesId = 0;
     private int dividerIime = 2000;
 
+    private int scrollWidth = 0;
     private boolean isScrolling = false;
 
-    public ScrollVertialListView(Context context) {
+    public MarqueeLayout(Context context) {
         super(context);
-        init(context, null);
     }
 
-    public ScrollVertialListView(Context context, AttributeSet attrs) {
+    public MarqueeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-
-    public ScrollVertialListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MarqueeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
-    @TargetApi(21)
-    public ScrollVertialListView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
-    }
 
     /**
      * 运动速度控制
@@ -60,8 +58,9 @@ public class ScrollVertialListView extends ViewGroup {
      * @param ctx
      */
     private void init(Context ctx, AttributeSet attrs) {
-//        mScroller = new Scroller(ctx, new EaseSineInOutInterpolator());
-        mScroller = new Scroller(ctx);
+        setOrientation(HORIZONTAL);
+//        mScroller = new Scroller(ctx);
+        mScroller = new Scroller(ctx, new EaseSineInOutInterpolator());
         TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.VertialScrooll);
         try {
             itemLayoutResourcesId = a.getResourceId(R.styleable.VertialScrooll_itemLayout, 0);
@@ -90,6 +89,7 @@ public class ScrollVertialListView extends ViewGroup {
                 }
             });
         }
+        setRightItemSizeWidth();
     }
 
     /**
@@ -108,12 +108,86 @@ public class ScrollVertialListView extends ViewGroup {
      * @return
      */
     private View getItemView() {
+//        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+//        params.gravity = Gravity.CENTER_HORIZONTAL;
+//        ScrollView mScrollView = new ScrollView(getContext());
+//        mScrollView.addView(View.inflate(getContext(), itemLayoutResourcesId, null), new ScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+//        mScrollView.setLayoutParams(params);
+
+//        return mScrollView;
+
         return View.inflate(getContext(), itemLayoutResourcesId, null);
     }
 
+    /**
+     * @param view
+     * @return
+     */
+    private int getViewWidth(View view) {
+        if (view instanceof ViewGroup) {
+            return dealTextView(view);
+        } else if (view instanceof TextView) {
+            TextView text = (TextView) view;
+            if (!TextUtils.isEmpty(text.getText().toString())) {
+                Paint mPaint;
+                // init helper
+                mPaint = new Paint();
+                mPaint.setAntiAlias(true);
+                mPaint.setStrokeWidth(1);
+                mPaint.setStrokeCap(Paint.Cap.ROUND);
+                mPaint.setTextSize(text.getTextSize());
+                mPaint.setTypeface(text.getTypeface());
+                float mTextWidth = mPaint.measureText(text.getText().toString());
+
+                ViewGroup.LayoutParams lp = text.getLayoutParams();
+                lp.width = (int) mTextWidth;
+                text.setLayoutParams(lp);
+                return (int) mTextWidth;
+            }
+        }
+        return view.getWidth();
+    }
+
+
+    /**
+     * @param view
+     */
+    private int dealTextView(View view) {
+        int width = 0;
+        if (view instanceof ViewGroup) {
+            ViewGroup chil = (ViewGroup) view;
+            for (int i = 0; i < chil.getChildCount(); i++) {
+                width += getViewWidth(chil.getChildAt(i));
+            }
+        } else {
+            width = getViewWidth(view);
+        }
+
+        return width;
+    }
+
+    /**
+     *
+     */
+    private void setRightItemSizeWidth() {
+        scrollWidth = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            int width = dealTextView(view);
+            LayoutParams params = (LayoutParams) view.getLayoutParams();
+            params.width = width;
+            scrollWidth += width;
+            view.setLayoutParams(params);
+        }
+        Log.e("scrollWidth",scrollWidth + "");
+//        LayoutParams params = (LayoutParams) this.getLayoutParams();
+//        params.width = scrollWidth;
+//        this.setLayoutParams(params);
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = 0;
         int height = 0;
 
@@ -134,25 +208,33 @@ public class ScrollVertialListView extends ViewGroup {
         }
 
         setMeasuredDimension(width, height + getPaddingTop() + getPaddingBottom());
+
+        setRightItemSizeWidth();
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        for (int i = 0; i < getChildCount(); i++) {
-            final View child = getChildAt(i);
-            final int left = getPaddingLeft();
-            final int top = getPaddingTop() + i * getScroollItemHeight();
-            final int right = getMeasuredWidth() - getPaddingRight();
-            final int bottom = top + child.getMeasuredHeight();
-            child.layout(left, top, right, bottom);
-        }
+        super.onLayout(changed, l, t, r, b);
+
+        //        int right = 0;
+//        for (int i = 0; i < getChildCount(); i++) {
+//            final View child = getChildAt(i);
+//            final int left = getPaddingLeft() + right;
+//            final int top = getPaddingTop();
+//            int childWidth = dealTextView(child);
+//            right += (childWidth > getMeasuredWidth() ? childWidth : getMeasuredWidth()) + getPaddingRight();
+//            final int bottom = top + child.getMeasuredHeight();
+//            child.layout(left, top, right, bottom);
+//        }
+//        scrollWidth = right;
+
     }
 
     /**
      * 获取滑动的高度
      */
-    private int getScroollItemHeight() {
-        return getChildCount() > 0 ? getChildAt(0).getMeasuredHeight() : 0;
+    private int getScroollDistance() {
+        return getChildCount() > 0 ? scrollWidth - getMeasuredWidth() : 0;
     }
 
     /**
@@ -176,7 +258,7 @@ public class ScrollVertialListView extends ViewGroup {
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-            scrollTo(0, mScroller.getCurrY());
+            scrollTo(mScroller.getCurrX(), 0);
             postInvalidate();
         }
     }
@@ -240,7 +322,8 @@ public class ScrollVertialListView extends ViewGroup {
      * @return
      */
     private int getDuration() {
-        return getScroollItemHeight() * 10;
+//        return getScroollDistance() * 10;
+        return getScroollDistance() * 5;
     }
 
     /**
@@ -252,8 +335,8 @@ public class ScrollVertialListView extends ViewGroup {
             throw new IllegalArgumentException("You must set ScrollVertialAdapter before startSchedul");
 
         isScrolling = true;
-        refreshHandler.sendEmptyMessageDelayed(0, dividerIime + getDuration());
-        mScroller.startScroll(0, 0, 0, getScroollItemHeight(), getDuration());
+        refreshHandler.sendEmptyMessageDelayed(0,  getDuration());//dividerIime +
+        mScroller.startScroll(0, 0, getScroollDistance(), 0, getDuration());
         invalidate();
     }
 
