@@ -8,9 +8,11 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -18,7 +20,7 @@ import android.widget.TextView;
 /**
  * Created by SoLi on 2016/5/25.
  */
-public class MarqueeLayout extends LinearLayout {
+public class MarqueeLayout extends HorizontalScrollView {
 
     private ScrollVertialAdapter mAdapter;
 
@@ -54,12 +56,18 @@ public class MarqueeLayout extends LinearLayout {
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
     /**
      * @param ctx
      */
     private void init(Context ctx, AttributeSet attrs) {
-        setOrientation(HORIZONTAL);
+//        setOrientation(HORIZONTAL);
 //        mScroller = new Scroller(ctx);
+        setHorizontalScrollBarEnabled(false);
         mScroller = new Scroller(ctx, new EaseSineInOutInterpolator());
         TypedArray a = ctx.obtainStyledAttributes(attrs, R.styleable.VertialScrooll);
         try {
@@ -78,8 +86,9 @@ public class MarqueeLayout extends LinearLayout {
     private void setViewContentData() {
         if (mAdapter == null) return;
 
-        for (int pos = 0; pos < getChildCount(); pos++) {
-            View view = getChildAt(pos);
+        ViewGroup child = (ViewGroup) getChildAt(0);
+        for (int pos = 0; pos < child.getChildCount(); pos++) {
+            View view = child.getChildAt(pos);
             mAdapter.setView(pos, view);
             view.setTag(pos);
             view.setOnClickListener(new OnClickListener() {
@@ -97,10 +106,17 @@ public class MarqueeLayout extends LinearLayout {
      */
     private void addChildView() {
         if (itemLayoutResourcesId > 0) {
-            removeAllViews();
-            addView(getItemView());
-            addView(getItemView());
-            setViewContentData();
+//            removeAllViews();
+//
+//            LinearLayout layout = new LinearLayout(getContext());
+//            layout.setOrientation(LinearLayout.HORIZONTAL);
+//            layout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+////            addView(getItemView());
+////            addView(getItemView());
+//            layout.addView(getItemView());
+//            layout.addView(getItemView());
+//            addView(layout);
+//            setViewContentData();
         }
     }
 
@@ -139,13 +155,14 @@ public class MarqueeLayout extends LinearLayout {
                 mPaint.setTypeface(text.getTypeface());
                 float mTextWidth = mPaint.measureText(text.getText().toString());
 
-                ViewGroup.LayoutParams lp = text.getLayoutParams();
-                lp.width = (int) mTextWidth;
-                text.setLayoutParams(lp);
+//                ViewGroup.LayoutParams lp = text.getLayoutParams();
+//                lp.width = (int) mTextWidth;
+//                text.setLayoutParams(lp);
                 return (int) mTextWidth;
             }
         }
-        return view.getWidth();
+//        return view.getWidth();
+        return 80;
     }
 
 
@@ -171,15 +188,16 @@ public class MarqueeLayout extends LinearLayout {
      */
     private void setRightItemSizeWidth() {
         scrollWidth = 0;
-        for (int i = 0; i < getChildCount(); i++) {
-            View view = getChildAt(i);
+        ViewGroup child = (ViewGroup) getChildAt(0);
+        for (int i = 0; i < child.getChildCount(); i++) {
+            View view = child.getChildAt(i);
             int width = dealTextView(view);
-            LayoutParams params = (LayoutParams) view.getLayoutParams();
-            params.width = width;
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+//            params.width = width;
             scrollWidth += width;
-            view.setLayoutParams(params);
+//            view.setLayoutParams(params);
         }
-        Log.e("scrollWidth",scrollWidth + "");
+        Log.e("scrollWidth", scrollWidth + "");
 //        LayoutParams params = (LayoutParams) this.getLayoutParams();
 //        params.width = scrollWidth;
 //        this.setLayoutParams(params);
@@ -188,26 +206,26 @@ public class MarqueeLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int width = 0;
-        int height = 0;
-
-        for (int i = 0; i < getChildCount(); i++) {
-            measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
-//            height += getChildAt(i).getMeasuredHeight();
-            height = getChildAt(i).getMeasuredHeight();
-            width = getChildAt(i).getMeasuredWidth();
-        }
-
-        final int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
-        final int viewMode = MeasureSpec.getMode(widthMeasureSpec);
-
-        if (viewMode == MeasureSpec.EXACTLY) {
-            width = viewWidth;
-        } else {
-            width += getPaddingLeft() + getPaddingRight();
-        }
-
-        setMeasuredDimension(width, height + getPaddingTop() + getPaddingBottom());
+//        int width = 0;
+//        int height = 0;
+//
+//        for (int i = 0; i < getChildCount(); i++) {
+//            measureChild(getChildAt(i), widthMeasureSpec, heightMeasureSpec);
+////            height += getChildAt(i).getMeasuredHeight();
+//            height = getChildAt(i).getMeasuredHeight();
+//            width = getChildAt(i).getMeasuredWidth();
+//        }
+//
+//        final int viewWidth = MeasureSpec.getSize(widthMeasureSpec);
+//        final int viewMode = MeasureSpec.getMode(widthMeasureSpec);
+//
+//        if (viewMode == MeasureSpec.EXACTLY) {
+//            width = viewWidth;
+//        } else {
+//            width += getPaddingLeft() + getPaddingRight();
+//        }
+//
+//        setMeasuredDimension(width, height + getPaddingTop() + getPaddingBottom());
 
         setRightItemSizeWidth();
     }
@@ -257,6 +275,7 @@ public class MarqueeLayout extends LinearLayout {
 
     @Override
     public void computeScroll() {
+        super.computeScroll();
         if (mScroller.computeScrollOffset()) {
             scrollTo(mScroller.getCurrX(), 0);
             postInvalidate();
@@ -335,7 +354,7 @@ public class MarqueeLayout extends LinearLayout {
             throw new IllegalArgumentException("You must set ScrollVertialAdapter before startSchedul");
 
         isScrolling = true;
-        refreshHandler.sendEmptyMessageDelayed(0,  getDuration());//dividerIime +
+        refreshHandler.sendEmptyMessageDelayed(0, getDuration());//dividerIime +
         mScroller.startScroll(0, 0, getScroollDistance(), 0, getDuration());
         invalidate();
     }

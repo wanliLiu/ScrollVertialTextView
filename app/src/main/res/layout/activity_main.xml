@@ -56,11 +56,11 @@
             android:onClick="Test"
             android:text="测试" />
 
-        <com.soli.scrollvertialtextview.MarqueeLayout
-            android:id="@+id/marqueeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemLayout="@layout/scrooller_item" />
+        <!--<com.soli.scrollvertialtextview.MarqueeLayout-->
+        <!--android:id="@+id/marqueeLayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:itemLayout="@layout/scrooller_item" />-->
 
         <soli.scrollvertialtextview.MarqueeView
             android:id="@+id/enContainer"
@@ -80,6 +80,8 @@
                 android:text="2----购买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味道不同）-------同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味的护肤品和之前同款的味道不同（或者和专柜的味的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味买的护肤品和之前同款的味道不同（或者和专柜的味道不同）----------------------------结束"
                 android:textSize="14sp" />
         </soli.scrollvertialtextview.MarqueeView>
+
+        <include layout="@layout/scrooller_item_one" />
     </LinearLayout>
 </ScrollView>
 

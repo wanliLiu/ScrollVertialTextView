@@ -118,7 +118,12 @@ public class MainActivity extends AppCompatActivity {
 //            {
 //                view.setBackgroundColor(getResources().getColor(R.color.color_blue));
 //            }
-            ((TextView) view.findViewById(R.id.title)).setText(getTextString(position));
+            try {
+                ((TextView) view.findViewById(R.id.title)).setText(getTextString(position));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
