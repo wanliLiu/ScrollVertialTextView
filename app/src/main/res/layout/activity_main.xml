@@ -56,11 +56,11 @@
             android:onClick="Test"
             android:text="测试" />
 
-        <!--<com.soli.scrollvertialtextview.MarqueeLayout-->
-        <!--android:id="@+id/marqueeLayout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:itemLayout="@layout/scrooller_item" />-->
+        <com.soli.scrollvertialtextview.MarqueeLayout
+            android:id="@+id/marqueeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemLayout="@layout/scrooller_item" />
 
         <soli.scrollvertialtextview.MarqueeView
             android:id="@+id/enContainer"
@@ -81,7 +81,7 @@
                 android:textSize="14sp" />
         </soli.scrollvertialtextview.MarqueeView>
 
-        <include layout="@layout/scrooller_item_one" />
+        <!--<include layout="@layout/scrooller_item_one" />-->
     </LinearLayout>
 </ScrollView>
 
